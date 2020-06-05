@@ -2,7 +2,7 @@
     <div>
         <img alt="Vue logo" src="https://th.bing.com/th/id/OIP.04d31jgs0J8aQWHe8wFBtQHaHa?w=173&h=171&c=7&o=5&dpr=1.25&pid=1.7">
         <h2>Please insert a package name to search at the NuGet.org</h2>
-        <input type="text" v-model="pkg.name" placeholder="Package's name..." v-on:keyup.enter="handleSearch">
+        <input type="text" v-model="pkg.name" maxlength="50" size="60" placeholder="Package's name..." v-on:keyup.enter="handleSearch" v-on:keyup.delete="reset">
         <br/>
         <input type="radio" class="radio" id="major" :checked="radio.major" @click="handleMajor">
         <label for="major">Major</label> <br/>
@@ -11,7 +11,7 @@
         <input type="radio" class="radio" id="patch" :checked="radio.patch" @click="handlePatch">
         <label for="patch">Patch</label> <br/>
         <br/>
-        <div v-show="display.show">
+        <div v-show="display.show && pkg.name.length > 0">
             <h4  v-text="pkg.name"></h4>
             <h4 >based on {{pkg.type}}</h4>
             <h4>{{version.major}} . {{version.minor}} . {{version.patch}}</h4>
@@ -52,7 +52,6 @@
         },
         methods: {
             handleSearch: function () {
-                // 'http://127.0.0.1:5000/api/nuget/lion.core/minor/json'
                 const {main, middle, suffix} = this.URL;
                 const {name, type} = this.pkg;
                 let route = main.concat(middle, name, '/', type, '/', suffix);
@@ -89,6 +88,12 @@
                 this.radio.patch = true;
                 this.handleSearch();
 
+            },
+            reset: function () {
+                if (this.pkg.name.length === 0) {
+                    this.version = {major: '', minor: '', patch: ''};
+                }
+                console.log(this.pkg);
             }
         }
     }
