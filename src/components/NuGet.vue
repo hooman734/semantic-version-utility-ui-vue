@@ -27,8 +27,8 @@
         data() {
             return {
                 URL: {
-                    main: 'http://127.0.0.1:5000/',
-                    middle: 'api/nuget/',
+                    main: "https://query-on-nuget.herokuapp.com/",//'http://127.0.0.1:5000/',
+                    middle: 'api/',
                     suffix: '/json'
                 },
                 pkg: {
@@ -54,11 +54,11 @@
             handleSearch: function () {
                 const {main, middle, suffix} = this.URL;
                 const {name, type} = this.pkg;
-                let route = main.concat(middle, name, '/', type, '/', suffix);
+                let route = main.concat(middle, name, '/', type, suffix);
                 axios.get(route).then(reply => {
-                this.version.major = reply.data[2][0];
-                this.version.minor = reply.data[2][1];
-                this.version.patch = reply.data[2][2];
+                this.version.major = reply.data[0];
+                this.version.minor = reply.data[1];
+                this.version.patch = reply.data[2];
                 this.display.show = true;
             }, error => {
                     this.version.major = '-';
